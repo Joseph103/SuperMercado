@@ -1,9 +1,12 @@
 package ventanas;
 
 import SuperMercado.Almacen;
+import SuperMercado.Empleado;
 import SuperMercado.Producto;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /*
@@ -11,38 +14,46 @@ import javax.swing.JOptionPane;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Joe
  */
 public class AdExterno extends javax.swing.JFrame {
 
-     Administrador administrador ;
-     public  Almacen market;
-     Producto producto;
+    Administrador administrador;
+    VentasRealizadas ventasrealizadas;
+    public Almacen market;
+    Producto producto;
+
     /**
      * Creates new form AdExterno
+     *
      * @param market
      */
     public AdExterno(Almacen market) {
         this.market = market;
-      
+
         initComponents();
         Manejadorventana mv = new Manejadorventana();
-        MostrarVentana.addActionListener(mv);
+        Inicio.addActionListener(mv);
+
+        Manejadorventas ms = new Manejadorventas();
+        MostrarVentana.addActionListener(ms);
         
+        Login log= new Login();
+        aceptar1.addActionListener(log);
+        contraseña1.addActionListener(log);
         
-              this.Acercade.addActionListener(new ActionListener() {
+
+        this.Acercade.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                
-                JOptionPane.showMessageDialog(AdExterno.this,"Programa creado por: Joseph Bejarano");
-                }
+
+                JOptionPane.showMessageDialog(AdExterno.this, "Programa creado por: Joseph Bejarano");
+            }
         });
 
-        
     }
 
     /**
@@ -56,10 +67,18 @@ public class AdExterno extends javax.swing.JFrame {
 
         jMenuItem2 = new javax.swing.JMenuItem();
         Desktop = new javax.swing.JDesktopPane();
+        LoginPrincipal = new javax.swing.JPanel();
+        login = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        usuario1 = new javax.swing.JTextField();
+        contraseña1 = new javax.swing.JTextField();
+        aceptar1 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         Inicio = new javax.swing.JMenuItem();
-        Cerrar = new javax.swing.JMenuItem();
         MostrarVentana = new javax.swing.JMenuItem();
         Help = new javax.swing.JMenu();
         Acercade = new javax.swing.JMenuItem();
@@ -68,22 +87,109 @@ public class AdExterno extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        login.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel5.setText("Usuario");
+
+        jLabel6.setText("Contraseña");
+
+        aceptar1.setText("Aceptar");
+
+        javax.swing.GroupLayout loginLayout = new javax.swing.GroupLayout(login);
+        login.setLayout(loginLayout);
+        loginLayout.setHorizontalGroup(
+            loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(loginLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(usuario1, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                    .addComponent(contraseña1))
+                .addGap(96, 96, 96))
+            .addGroup(loginLayout.createSequentialGroup()
+                .addGap(81, 81, 81)
+                .addComponent(aceptar1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        loginLayout.setVerticalGroup(
+            loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(loginLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(usuario1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(contraseña1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(aceptar1)
+                .addContainerGap())
+        );
+
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 51, 255));
+        jLabel1.setText("Login");
+
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Joe\\Pictures\\Saved Pictures\\download.png")); // NOI18N
+        jLabel2.setText("jLabel2");
+
+        javax.swing.GroupLayout LoginPrincipalLayout = new javax.swing.GroupLayout(LoginPrincipal);
+        LoginPrincipal.setLayout(LoginPrincipalLayout);
+        LoginPrincipalLayout.setHorizontalGroup(
+            LoginPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(LoginPrincipalLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 227, Short.MAX_VALUE)
+                .addGroup(LoginPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(LoginPrincipalLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(LoginPrincipalLayout.createSequentialGroup()
+                        .addGap(69, 69, 69)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(69, 69, 69))
+        );
+        LoginPrincipalLayout.setVerticalGroup(
+            LoginPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(LoginPrincipalLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(LoginPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(LoginPrincipalLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(25, 25, 25)
+                        .addComponent(login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2))
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout DesktopLayout = new javax.swing.GroupLayout(Desktop);
         Desktop.setLayout(DesktopLayout);
         DesktopLayout.setHorizontalGroup(
             DesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 700, Short.MAX_VALUE)
+            .addGroup(DesktopLayout.createSequentialGroup()
+                .addGap(95, 95, 95)
+                .addComponent(LoginPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(140, Short.MAX_VALUE))
         );
         DesktopLayout.setVerticalGroup(
             DesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 340, Short.MAX_VALUE)
+            .addGroup(DesktopLayout.createSequentialGroup()
+                .addGap(152, 152, 152)
+                .addComponent(LoginPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(204, Short.MAX_VALUE))
         );
+        Desktop.setLayer(LoginPrincipal, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jMenuBar1.setBackground(new java.awt.Color(255, 255, 255));
 
         jMenu1.setText("File");
 
         Inicio.setText("Inicio");
+        Inicio.setEnabled(false);
         Inicio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 InicioActionPerformed(evt);
@@ -91,10 +197,13 @@ public class AdExterno extends javax.swing.JFrame {
         });
         jMenu1.add(Inicio);
 
-        Cerrar.setText("Cerrar");
-        jMenu1.add(Cerrar);
-
         MostrarVentana.setText("Mostrar venta");
+        MostrarVentana.setEnabled(false);
+        MostrarVentana.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MostrarVentanaActionPerformed(evt);
+            }
+        });
         jMenu1.add(MostrarVentana);
 
         jMenuBar1.add(jMenu1);
@@ -126,38 +235,87 @@ public class AdExterno extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_InicioActionPerformed
 
+    private void MostrarVentanaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MostrarVentanaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_MostrarVentanaActionPerformed
+
     /**
      * @param args the command line arguments
      */
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Acercade;
-    private javax.swing.JMenuItem Cerrar;
     private javax.swing.JDesktopPane Desktop;
     private javax.swing.JMenu Help;
     private javax.swing.JMenuItem Inicio;
+    private javax.swing.JPanel LoginPrincipal;
     private javax.swing.JMenuItem MostrarVentana;
+    private javax.swing.JButton aceptar1;
+    private javax.swing.JTextField contraseña1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JPanel login;
+    private javax.swing.JTextField usuario1;
     // End of variables declaration//GEN-END:variables
 
-    public class Manejadorventana implements ActionListener{
-   
-     
+    public class Manejadorventana implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent ae) {
-           if(administrador == null){
-               administrador = new Administrador(market);
-                 Desktop.add(administrador);
-           }
-           
-         
-           administrador.setVisible(true);
-           
+            if (administrador == null) {
+                administrador = new Administrador(market);
+                Desktop.add(administrador);
+            }
+
+            administrador.setVisible(true);
+
         }
-        
+
     }
 
+    public class Manejadorventas implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            if (ventasrealizadas == null) {
+                ventasrealizadas = new VentasRealizadas(market);
+
+                Desktop.add(ventasrealizadas);
+
+                ventasrealizadas.setVisible(true);
+            }
+        }
+
+    }
+
+    public class Login implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            try {
+                String Usuario = usuario1.getText().trim();
+                String Password = contraseña1.getText().trim();
+
+                Empleado empleado =market.BuscarEmpleado(Usuario);
+                if (empleado.getContraseña().equals(Password)){
+                    market.logueado=empleado;
+                    new Manejadorventana().actionPerformed(ae);
+                    LoginPrincipal.setVisible(false);
+                    Inicio.setEnabled(true);
+                    MostrarVentana.setEnabled(true);
+                }else{
+                    JOptionPane.showMessageDialog(null, "El password esta incorrecto");
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+
+        }
+
+    }
 }

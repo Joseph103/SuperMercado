@@ -5,6 +5,8 @@
  */
 package SuperMercado;
 
+import java.util.Objects;
+
 /**
  *
  * @author User
@@ -49,6 +51,23 @@ public class Producto {
     @Override
     public String toString() {
         return "Producto{" + "Codigo=" + Codigo + ", Nombre=" + Nombre + ", Costo=" + Costo + '}';
+    }
+
+ 
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Producto other = (Producto) obj;
+        if (!Objects.equals(this.Codigo, other.Codigo)) {
+            return false;
+        }
+        return true;
     }
     
     

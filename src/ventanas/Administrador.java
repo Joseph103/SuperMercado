@@ -3,6 +3,8 @@ package ventanas;
 import SuperMercado.Almacen;
 import SuperMercado.Cliente;
 import SuperMercado.Compra;
+import SuperMercado.DetalleCompra;
+import SuperMercado.Empleado;
 import SuperMercado.Producto;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,68 +18,94 @@ import javax.swing.table.AbstractTableModel;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Joe
  */
 public class Administrador extends javax.swing.JInternalFrame {
-       private Almacen market;
-       private Compra compra ;
-       private Producto producto;
 
-    
-       
+    private Almacen market;
+    private Compra compra;
+    private Producto producto;
+
     /**
      * Creates new form Administrador
      */
     public Administrador(Almacen market) {
-        this.market=market;
-        this.compra= new Compra(null);
+        this.market = market;
+        
+        
+        try {
+            this.compra = new Compra(market.logueado);
+        } catch (Exception ex) {
+            Logger.getLogger(Administrador.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
         Titulo.setText(market.getNombre());
-       
-       
+
         BuscarCliente bc = new BuscarCliente();
         Jbuscar.addActionListener(bc);
         IdeField.addActionListener(bc);
 
         BuscarProducto bp = new BuscarProducto();
         Codigo.addActionListener(bp);
-        
+
+        RegistrarCompra rc = new RegistrarCompra();
+        Registrar.addActionListener(rc);
+        Cantidad.addActionListener(rc);
+
+        DevolverCompra dc = new DevolverCompra();
+        Devolver.addActionListener(dc);
+
+        RegistrarVenta rv = new RegistrarVenta();
+        Rv.addActionListener(rv);
+
         this.Table.setModel(new AbstractTableModel() {
 
             @Override
             public int getRowCount() {
-              return compra.getDetalles().size();
-}
-            @Override
-            public int getColumnCount() {
-               return 4;
+                return compra.getDetalles().size();
             }
 
-   public String getColumnName(int ColumnIndex){
-       switch(ColumnIndex){
-           
-           case 0:
-               return "Producto";
-               
-           case 1:
-               return "Costo Unitario";
-           case 2:
-               return "Cantidad";
-           case 3:
-               return "Costo";
-       }
-       
-       return "" ;
-   }
             @Override
-            public Object getValueAt(int rowIndex, int ColumnIndex) {
-         
+            public int getColumnCount() {
+                return 4;
+            }
+
+            public String getColumnName(int ColumnIndex) {
+                switch (ColumnIndex) {
+
+                    case 0:
+                        return "Producto";
+
+                    case 1:
+                        return "Costo Unitario";
+                    case 2:
+                        return "Cantidad";
+                    case 3:
+                        return "Costo";
+                }
+
+                return "";
+            }
+
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                DetalleCompra detalle = compra.getDetalles().get(rowIndex);
+                switch (columnIndex) {
+                    case 0:
+                        return detalle.getProducto().getNombre();
+                    case 1:
+                        return detalle.getProducto().getCosto();
+                    case 2:
+                        return detalle.getCantidadProductos();
+                    case 3:
+                        return detalle.calcularDetalle();
+                }
+                return "";
             }
         });
-        
+
     }
 
     /**
@@ -111,18 +139,18 @@ public class Administrador extends javax.swing.JInternalFrame {
         Nomproduct = new javax.swing.JTextField();
         Costo = new javax.swing.JTextField();
         Cantidad = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        Registrar = new javax.swing.JButton();
+        Devolver = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
+        pca = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         Table = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        total = new javax.swing.JTextPane();
+        Rv = new javax.swing.JButton();
+        Cv = new javax.swing.JButton();
         jLabel15 = new javax.swing.JLabel();
         Titulo = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -149,7 +177,9 @@ public class Administrador extends javax.swing.JInternalFrame {
         setBackground(new java.awt.Color(255, 255, 255));
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        setResizable(true);
         setTitle("SuperMarket");
+        setMinimumSize(new java.awt.Dimension(643, 736));
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"), "Cliente"));
@@ -234,9 +264,9 @@ public class Administrador extends javax.swing.JInternalFrame {
 
         Costo.setEditable(false);
 
-        jButton2.setText("Registrar");
+        Registrar.setText("Registrar");
 
-        jButton3.setText("Devolver");
+        Devolver.setText("Devolver");
 
         jLabel8.setText("Detalle de la Compra:");
 
@@ -262,16 +292,16 @@ public class Administrador extends javax.swing.JInternalFrame {
 
         jLabel10.setText("Total:");
 
-        jScrollPane2.setViewportView(jTextPane1);
+        jScrollPane2.setViewportView(total);
 
-        jButton5.setText("Registrar Ventana");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        Rv.setText("Registrar Venta");
+        Rv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                RvActionPerformed(evt);
             }
         });
 
-        jButton6.setText("Cancelar Ventana");
+        Cv.setText("Cancelar Venta");
 
         jLabel15.setText("Vendedor: No Registrado");
 
@@ -282,7 +312,7 @@ public class Administrador extends javax.swing.JInternalFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Registrar, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -299,7 +329,7 @@ public class Administrador extends javax.swing.JInternalFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7)
                             .addComponent(Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Devolver, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Costo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(68, 68, 68))
             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -314,14 +344,14 @@ public class Administrador extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(pca, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(23, 23, 23))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(78, 78, 78)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Rv, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Cv, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -348,11 +378,11 @@ public class Administrador extends javax.swing.JInternalFrame {
                     .addComponent(Cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(Registrar)
+                    .addComponent(Devolver))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9)
                     .addComponent(jLabel8))
                 .addGap(9, 9, 9)
@@ -363,8 +393,8 @@ public class Administrador extends javax.swing.JInternalFrame {
                     .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Rv, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Cv, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addComponent(jLabel15)
                 .addContainerGap())
@@ -420,31 +450,30 @@ public class Administrador extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_NomproductActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void RvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RvActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_RvActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Cantidad;
     private javax.swing.JTextField Codigo;
     private javax.swing.JTextField Costo;
+    private javax.swing.JButton Cv;
+    private javax.swing.JButton Devolver;
     private javax.swing.JTextField IdeField;
     private javax.swing.JButton Jbuscar;
     private javax.swing.JTextField NomField;
     private javax.swing.JTextField Nomproduct;
     private javax.swing.JTextField PunField;
+    private javax.swing.JButton Registrar;
+    private javax.swing.JButton Rv;
     private javax.swing.JTable Table;
     private javax.swing.JLabel Titulo;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
@@ -465,48 +494,113 @@ public class Administrador extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JTextField pca;
+    private javax.swing.JTextPane total;
     // End of variables declaration//GEN-END:variables
 
-    public class BuscarCliente implements ActionListener{
+    public class BuscarCliente implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
             try {
-                long Ide =Long.parseLong(IdeField.getText().trim());
+                long Ide = Long.parseLong(IdeField.getText().trim());
                 Cliente cliente = market.BuscarCliente(Ide);
                 compra.setCliente(cliente);
                 NomField.setText(cliente.getNombres());
                 PunField.setText(Integer.toString(cliente.getPuntos()));
-                
-                
+
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
-            
+
         }
-        
-        
+
     }
-    
-        public class BuscarProducto implements ActionListener{
+
+    public class BuscarProducto implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
             try {
-                String cod =(Codigo.getText());
-               Producto producto = market.BuscarProductos(cod);
-               Nomproduct.setText(producto.getNombre());
-               Costo.setText(producto.getCosto()+"");
-                
-                  } catch (Exception ex) {
+                String cod = (Codigo.getText());
+                producto = market.BuscarProductos(cod);
+                Nomproduct.setText(producto.getNombre());
+                Costo.setText(producto.getCosto() + "");
+
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
-            
+
         }
-        
-        
+
     }
+
+    public class RegistrarCompra implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+
+            int cantidad = Integer.parseInt(Cantidad.getText());
+
+            DetalleCompra detalle = new DetalleCompra(cantidad, producto);
+            compra.addDetalle(detalle);
+            Table.updateUI();
+            Codigo.setText("");
+            Nomproduct.setText("");
+            Costo.setText("");
+            Cantidad.setText("");
+            producto = null;
+            pca.setText(compra.acomularPuntos() + "");
+            total.setText(compra.getCostoTotal() + "");
+        }
+
+    }
+
+    public class DevolverCompra implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            int Selected = Table.getSelectedRow();
+            compra.removeDetalle(Selected);
+            Table.updateUI();
+            pca.setText(compra.acomularPuntos() + "");
+            total.setText(compra.getCostoTotal() + "");
+        }
+
+    }
+
+   public class RegistrarVenta implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+              market.addCompra(compra);
+               new CancelarVenta().actionPerformed(e);
+                System.out.println("Tamaño de la lista de compras: "+ market.getCompras().size());
+            } catch (Exception ex) {
+              JOptionPane.showMessageDialog(null, ex.getMessage());
+            }            
+        }
+    }
+   
+public class CancelarVenta implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            compra = new Compra(market.logueado);
+                 producto = null;             
+                total.setText("");
+                IdeField.setText("");
+                Nomproduct.setText("");
+                PunField.setText("");
+                Codigo.setText("");
+                NomField.setText("");
+                Costo.setText("");
+                Cantidad.setText("");
+                pca.setText("");
+                Table.updateUI();
+               }
+    
+} 
 
 }

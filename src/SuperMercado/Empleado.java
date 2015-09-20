@@ -53,6 +53,15 @@ public class Empleado {
         return Contraseña;
     }
 
+    public void setLogin(String Login) {
+        this.Login = Login;
+    }
+
+    public void setContraseña(String Contraseña) {
+        this.Contraseña = Contraseña;
+    }
+    
+
     @Override
     public String toString() {
         return "Empleado{" + "Identificacion=" + Identificacion + ", Nombres=" + Nombres + ", Apellidos=" + Apellidos + ", Login=" + Login + ", Contrase\u00f1a=" + Contraseña + '}';

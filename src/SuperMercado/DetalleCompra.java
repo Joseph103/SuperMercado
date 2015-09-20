@@ -5,6 +5,8 @@
  */
 package SuperMercado;
 
+import java.util.Objects;
+
 
 /**
  *
@@ -12,7 +14,7 @@ package SuperMercado;
  */
 public class DetalleCompra {
     
-     private int cantidadProductos;
+     public int cantidadProductos;
      private Producto Producto;
 
     public DetalleCompra(int cantidadProductos, Producto Producto) {
@@ -28,17 +30,32 @@ public class DetalleCompra {
         return Producto;
     }
      
-  public float calcularDetalle(String codigo,float costo){
+  public float calcularDetalle(){
         float c = 0;
-      if(Producto.getCodigo()== codigo){
-           c=Producto.getCosto()+costo;
-        }
-        return c;
+           c= Producto.getCosto()*cantidadProductos;
+      return c;
     }
   
     @Override
     public String toString() {
         return "DetalleCompra{" + "cantidadProductos=" + cantidadProductos + '}';
+    }
+
+    
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DetalleCompra other = (DetalleCompra) obj;
+        if (!Objects.equals(this.Producto, other.Producto)) {
+            return false;
+        }
+        return true;
     }
     
 }

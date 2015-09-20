@@ -13,6 +13,7 @@ import java.util.LinkedList;
  */
 public class Almacen {
     
+    public Empleado logueado = null;
     private String Nombre;
     private String NIT;
     private LinkedList<Empleado> Empleados; 
@@ -43,6 +44,10 @@ public class Almacen {
 
     public String getNIT() {
         return NIT;
+    }
+
+    public LinkedList<Compra> getCompras() {
+        return Compras;
     }
     
     
@@ -107,7 +112,17 @@ public class Almacen {
             }
             
         }
-       throw new ObjectNotFoundException("el empleado con identificacion"+identificacion+"no se encuentra");
+       throw new ObjectNotFoundException("el empleado con identificacion "+identificacion+" no se encuentra");
+    }
+    
+    public Empleado BuscarEmpleado(String login) throws Exception{
+        for (Empleado empleado : Empleados) {
+            if(empleado.getLogin().equals( login)){
+                return empleado;
+            }
+            
+        }
+       throw new ObjectNotFoundException("el empleado con login: "+login+" no se encuentra");
     }
     
     
